@@ -58,12 +58,72 @@ This project allows a modern USB mouse connected to a Raspberry Pi to control a 
 
 ---
 
-## Running the System
+## Project Files
 
-1. **Power the Raspberry Pi** and connect the USB mouse.
-2. **Connect Pi TX → Arduino RX** and common ground.
-3. **Connect the Arduino’s DB-9 connector to the Mac’s mouse port.**
-4. On the Raspberry Pi, start your script (already configured for autostart if you used a systemd service):
-   ```bash
-   source ~/macmouse-venv/bin/activate
-   python ~/mouse_to_serial.py
+This project uses two main files:
+
+- **arduino-code.ino**  
+  Arduino sketch for the Arduino R4 Minima.
+  - Upload this file to your Arduino using the Arduino IDE or `arduino-cli`.
+  - This sketch reads serial commands from the Raspberry Pi and generates the quadrature outputs for the Mac.
+
+- **mouse_to_serial.py**  
+  Python script for the Raspberry Pi.
+  - Make sure you’ve set up your virtual environment (`macmouse-venv`) with `evdev` and `pyserial` installed:
+    ```bash
+    python3 -m venv ~/macmouse-venv
+    source ~/macmouse-venv/bin/activate
+    pip install evdev pyserial
+    ```
+  - Run the script manually with:
+    ```bash
+    source ~/macmouse-venv/bin/activate
+    python ~/mouse_to_serial.py
+    ```
+  - Or enable the systemd service you created for autostart on boot.
+
+---
+
+## Setup Steps
+
+1. **Prepare the Raspberry Pi:**
+   - Install Python virtual environment as shown above.
+   - Copy `mouse_to_serial.py` to your home directory (e.g., `/home/pi/mouse_to_serial.py`).
+
+2. **Prepare the Arduino:**
+   - Connect the Arduino R4 Minima to your computer via USB.
+   - Open `arduino-code.ino` in the Arduino IDE.
+   - Select the correct board (Arduino UNO R4 Minima) and port.
+   - Upload the sketch.
+
+3. **Connect the Hardware:**
+   - Wire Raspberry Pi TX → Arduino RX, and connect GND.
+   - Wire Arduino outputs to the DB-9 connector as described earlier.
+
+4. **Run the System:**
+   - Boot the Raspberry Pi. The systemd service will launch `mouse_to_serial.py` automatically if you set it up, or you can run it manually:
+     ```bash
+     source ~/macmouse-venv/bin/activate
+     python ~/mouse_to_serial.py
+     ```
+   - Move your USB mouse, and watch the Macintosh 512K respond with accurate cursor movement and clicks.
+
+---
+
+## Notes
+
+- Make sure the baud rate in both `mouse_to_serial.py` and `arduino-code.ino` match (default: 115200).
+- You can adjust thresholds or debounce times by editing `mouse_to_serial.py`.
+
+---
+
+## License
+
+MIT License. See `LICENSE` file for details.
+
+---
+
+## Acknowledgements
+
+- Original Macintosh mouse protocol reverse-engineered from Apple hardware documentation.
+- Inspired by various vintage computing communities and USB-to-quadrature projects.
