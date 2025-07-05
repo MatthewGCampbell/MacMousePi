@@ -1,6 +1,6 @@
 # Macintosh 512K USB Mouse Adapter
 
-This project allows a modern USB mouse connected to a Raspberry Pi to control a vintage Macintosh 512K through its original DB-9 mouse port. It uses a Raspberry Pi to read USB mouse movements and send them via serial to an Arduino R4 Minima, which outputs the quadrature signals required by the Mac's mouse interface.
+This project allows a modern USB mouse connected to a Raspberry Pi to control a vintage Macintosh 512K through its original DB-9 mouse port. It uses a Raspberry Pi to read USB mouse movements and send them via serial to an Arduino (with 5V logic), which outputs the quadrature signals required by the Mac's mouse interface.
 
 ---
 
@@ -9,9 +9,9 @@ This project allows a modern USB mouse connected to a Raspberry Pi to control a 
 - **Raspberry Pi (any model with USB)**
   - Reads a modern USB mouse using Python (`evdev` library).
   - Converts mouse movement/button events to serial commands.
-  - Sends commands over TX pin to Arduino.
+  - Sends commands over TX pin to the Arduino.
 
-- **Arduino UNO R4 Minima**
+- **Arduino (any model with 5V logic)**
   - Receives serial commands on its RX pin.
   - Generates quadrature signals (X1/X2, Y1/Y2) to emulate a Macintosh mouse.
   - Outputs signals on GPIO pins connected to a DE-9 (DB-9) connector.
@@ -21,25 +21,25 @@ This project allows a modern USB mouse connected to a Raspberry Pi to control a 
 
 ## Wiring
 
-### 1️⃣ Raspberry Pi → Arduino R4 Minima (Serial)
-| Raspberry Pi GPIO | Arduino R4 Pin | Description      |
-|-------------------|----------------|------------------|
-| GPIO14 (TX)       | RX (Pin 0)     | Pi sends data    |
-| GND               | GND            | Common ground    |
+### 1️⃣ Raspberry Pi → Arduino (Serial)
+| Raspberry Pi GPIO | Arduino Pin | Description      |
+|-------------------|-------------|------------------|
+| GPIO14 (TX)       | RX (Pin 0)  | Pi sends data    |
+| GND               | GND         | Common ground    |
 
-> ⚠️ **Important:** The Arduino R4 Minima uses 5V logic, and the Raspberry Pi uses 3.3V logic. In most cases, the Pi’s TX → Arduino RX is fine because the Arduino reads 3.3V as high. But if adding Arduino TX → Pi RX later, a level shifter **must** be used to avoid damaging the Pi.
+> ⚠️ **Important:** The Arduino uses 5V logic, and the Raspberry Pi uses 3.3V logic. In most cases, the Pi’s TX → Arduino RX is fine because the Arduino reads 3.3V as high. But if adding Arduino TX → Pi RX later, a level shifter **must** be used to avoid damaging the Pi.
 
 ---
 
 ### 2️⃣ Arduino → DB-9 Connector (Macintosh Mouse Port)
-| DB-9 Pin | Arduino Pin | Signal    | Description             |
-|----------|-------------|-----------|-------------------------|
-| 4        | X1 GPIO     | X1        | Quadrature X phase 1    |
-| 5        | X2 GPIO     | X2        | Quadrature X phase 2    |
-| 8        | Y1 GPIO     | Y1        | Quadrature Y phase 1    |
-| 9        | Y2 GPIO     | Y2        | Quadrature Y phase 2    |
+| DB-9 Pin | Arduino Pin | Signal    | Description               |
+|----------|-------------|-----------|---------------------------|
+| 4        | X1 GPIO     | X1        | Quadrature X phase 1      |
+| 5        | X2 GPIO     | X2        | Quadrature X phase 2      |
+| 8        | Y1 GPIO     | Y1        | Quadrature Y phase 1      |
+| 9        | Y2 GPIO     | Y2        | Quadrature Y phase 2      |
 | 7        | Button GPIO | BTN       | Mouse button (active low) |
-| 1 & 3    | GND         | GND       | Ground connections      |
+| 1 & 3    | GND         | GND       | Ground connections        |
 
 ---
 
@@ -63,7 +63,7 @@ This project allows a modern USB mouse connected to a Raspberry Pi to control a 
 This project uses two main files:
 
 - **arduino-code.ino**  
-  Arduino sketch for the Arduino R4 Minima.
+  Arduino sketch for any compatible Arduino board with 5V logic.
   - Upload this file to your Arduino using the Arduino IDE or `arduino-cli`.
   - This sketch reads serial commands from the Raspberry Pi and generates the quadrature outputs for the Mac.
 
@@ -91,9 +91,9 @@ This project uses two main files:
    - Copy `mouse_to_serial.py` to your home directory (e.g., `/home/pi/mouse_to_serial.py`).
 
 2. **Prepare the Arduino:**
-   - Connect the Arduino R4 Minima to your computer via USB.
+   - Connect your Arduino to your computer via USB.
    - Open `arduino-code.ino` in the Arduino IDE.
-   - Select the correct board (Arduino UNO R4 Minima) and port.
+   - Select the correct board type (e.g., Arduino Uno, Nano) and port.
    - Upload the sketch.
 
 3. **Connect the Hardware:**
