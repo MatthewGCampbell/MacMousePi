@@ -1,4 +1,4 @@
-# Macintosh 512K USB Mouse Adapter
+# Macintosh 512K USB Mouse Adapter (Or any macintosh with db9)
 
 This project allows a modern USB mouse connected to a Raspberry Pi to control a vintage Macintosh 512K through its original DB-9 mouse port. It uses a Raspberry Pi to read USB mouse movements and send them via serial to an Arduino (with 5V logic), which outputs the quadrature signals required by the Mac's mouse interface.
 
