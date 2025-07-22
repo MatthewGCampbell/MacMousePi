@@ -1,0 +1,19 @@
+# macOS system files
+.DS_Store
+
+# Thumbnails
+._*
+
+# macOS Finder directory metadata
+.Spotlight-V100
+.Trashes
+
+# VSCode settings
+.vscode/
+
+# Node modules (if it's a JS project)
+node_modules/
+
+# Python cache files
+__pycache__/
+*.pyc
